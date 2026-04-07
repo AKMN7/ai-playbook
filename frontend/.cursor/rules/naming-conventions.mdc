@@ -1,0 +1,72 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+---
+
+description: Naming-convention rules for all source files
+alwaysApply: true
+
+---
+
+# ✍️ Naming Conventions
+
+Follow these rules to keep the codebase consistent and IDE-search-friendly.
+
+---
+
+## 1 — Components
+
+| Aspect                     | Rule                                                      |
+| -------------------------- | --------------------------------------------------------- |
+| File name & default export | **PascalCase.tsx** (`UserCard.tsx`)                       |
+| Component identifier       | Same **PascalCase** as file (`function UserCard() …`)     |
+| Props shape                | Define **type**, never `interface`                        |
+| Props naming               | Must match component + `Props` suffix (`UserCardProps`)   |
+| Re-export                  | Use default export if file contains _only_ one component. |
+
+---
+
+## 2 — Hooks
+
+- File & function must start with **`use`** followed by PascalCase. _Example_: `useUserAttendance.ts → export function useUserAttendance() { … }`
+
+---
+
+## 3 — Helpers
+
+| Category                                | Naming                                      | Export style                                   |
+| --------------------------------------- | ------------------------------------------- | ---------------------------------------------- |
+| Stand-alone helper file                 | **PascalCase.ts** (`FormatPhone.ts`)        | `export default function FormatPhone(…) { … }` |
+| Minor helpers inside `src/lib/utils.ts` | **camelCase** (`formatDate`, `toTitleCase`) | **named** exports only                         |
+
+---
+
+## 4 — Routes (`src/routes`)
+
+- File names follow TanStack file-system router norms.
+    - Static segments → **kebab-case** (`dashboard.tsx`)
+    - Dynamic segments → `$param.tsx` (`$userId.tsx`)
+    - Layout wrapper → `_layout.tsx`
+- Route component identifiers are **PascalCase**.
+
+---
+
+## 5 — Services (`src/services/<Feature>`)
+
+| File           | Entity                         | Naming                                                        | Export    |
+| -------------- | ------------------------------ | ------------------------------------------------------------- | --------- |
+| `*.api.ts`     | Each outbound call             | **camelCase** (`getUser`, `createEvent`)                      | **named** |
+| `*.schemas.ts` | Zod schema objects             | **PascalCase** (`CompetitionPhasesSchema`, `EventMainSchema`) | **named** |
+|                | TS types inferred from schemas | Same name + `Type` (`EventMainSchemaType`)                    | **named** |
+
+---
+
+## 6 — Miscellaneous
+
+- Constants (`src/constants/`) → **SCREAMING_SNAKE_CASE**.
+- Enums → `PascalCase` enum name, `SCREAMING_SNAKE_CASE` members.
+
+---

@@ -1,0 +1,38 @@
+# Coding style & communication charter
+
+1. **Adhere to the established conventions**
+    - All code, file names, exports, schemas, hooks, and helpers **must** follow the rules defined in the other `.claude/rules/*` documents (project structure, naming conventions, feature workflow, translation, websocket integration, kiosk mode, etc.).
+    - Assume Tailwind, TypeScript strict mode, TanStack libraries, and the "schema-first" pattern for forms and API calls.
+
+2. **Touch-first design**
+    - UI must be designed for simple, touch-first interaction on kiosks, touchscreens, and exhibit displays.
+    - No `:hover`-only interactions — every hover effect must have a touch/tap equivalent or be removed entirely.
+    - Tap targets must be comfortably sized for finger input.
+    - Prefer on-screen controls (sliders, toggles, large buttons) over free-text fields. When text input is unavoidable, assume an on-screen keyboard.
+
+3. **Session lifecycle**
+    - Visitor sessions are **ephemeral** — state resets fully between users.
+    - No persistent login, no "remember me", no long-lived tokens on the client.
+    - Code should be structured so an idle/attract mode can be introduced later without major refactoring (e.g., session state should be resettable from a single point).
+
+4. **Performance**
+    - Interactions must feel instant on the target hardware.
+    - Heavy assets must be lazy-loaded; animations must run smoothly; no layout shifts.
+
+5. **Accessibility for public spaces**
+    - High contrast, readable font sizes, no reliance on colour alone for meaning.
+    - Assume visitors have varying levels of tech literacy — keep flows short and obvious.
+
+6. **Prefer explicitness over assumption**
+    - If a requirement, type, or edge-case is unclear, **ask** before generating code.
+    - Clarifying questions take priority over silent assumptions — this prevents rework.
+
+7. **Consistency is king**
+    - New code should _blend in_ — reuse existing helper patterns, naming, and folder layout.
+    - Divergence from conventions requires an Architecture Decision Record (ADR) or direct approval from Me.
+
+8. **Autofix when trivial, question when non-trivial**
+    - Minor lint or formatting issues may be fixed silently.
+    - Anything affecting logic, API contracts, or folder structure should trigger a question.
+
+> Follow these principles on every turn; do not proceed with uncertain implementation details without first seeking clarification.

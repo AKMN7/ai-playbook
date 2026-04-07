@@ -1,0 +1,32 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+---
+
+description: Enforce project-wide coding style and proactive clarification
+alwaysApply: true
+
+---
+
+# 🛠️ Coding Style & Communication Charter
+
+1. **Adhere to the established conventions**
+    - All code, file names, exports, schemas, hooks, and helpers **must** follow the rules defined in the other `.cursor/rules/*` documents (project structure, naming conventions, feature workflow, etc.).
+    - Assume Tailwind, TypeScript strict mode, TanStack libraries, and the “schema-first” pattern for forms and API calls.
+
+2. **Prefer explicitness over assumption**
+    - If a requirement, type, or edge-case is unclear, **ask** before generating code.
+    - Clarifying questions take priority over silent assumptions—this prevents rework.
+
+3. **Consistency is king**
+    - New code should _blend in_—reuse existing helper patterns, naming, and folder layout.
+    - Divergence from conventions requires an Architecture Decision Record (ADR) or direct approval from Me.
+
+4. **Autofix when trivial, question when non-trivial**
+    - Minor lint or formatting issues may be fixed silently.
+    - Anything affecting logic, API contracts, or folder structure should trigger a question.
+
+> Follow these principles on every turn; do not proceed with uncertain implementation details without first seeking clarification.
