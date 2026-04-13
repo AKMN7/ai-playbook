@@ -1,0 +1,86 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+---
+
+description: Project structure conventions for our NestJS 11 + Mongoose + class-validator backend
+alwaysApply: true
+
+---
+
+# Project Structure Rules
+
+These rules codify how files and folders **must** be organised in this repository.
+
+---
+
+## 0 — Global
+
+- **Language** — TypeScript only (`.ts`).
+- **Imports** — Cross-module imports use the `src/` prefix (e.g., `import { Role } from "src/common/enums"`). Intra-module imports use relative paths (`./`, `../`). Type-only imports use `import type`.
+- **File naming** — All source files use **kebab-case** with dot-separated type suffixes (e.g., `create-event.dto.ts`, `event.schema.ts`).
+- **Exports** — All entities use **named exports**. No default exports.
+
+---
+
+## 1 — `src/<feature>/` (Feature Modules)
+
+- A **folder = feature module**. Each feature contains:
+    - `<feature>.module.ts` — NestJS module declaration
+    - `<feature>.controller.ts` — route handlers (HTTP + optional RPC)
+    - `<feature>.service.ts` — business logic
+    - `<feature>.service.spec.ts` — colocated unit tests
+    - `dto/` — `create-<feature>.dto.ts`, `update-<feature>.dto.ts`, and optional sub-object DTOs
+    - `schemas/` — Mongoose schema classes
+- The controller is a thin dispatcher — **zero business logic**.
+- Feature modules do **not** re-declare Mongoose model registrations — models are registered globally in `AppModule`.
+
+---
+
+## 2 — `src/common/`
+
+- Shared enums, types, decorators, and services that span multiple feature modules.
+- File naming: `<name>.<type>.ts` (e.g., `enums.ts`, `sqs.service.ts`, `multi-target.dto.ts`).
+- Keep this folder flat — no sub-folders.
+
+---
+
+## 3 — `src/filters/`
+
+- Global exception filters registered via `APP_FILTER` in `AppModule`.
+- One filter per concern: `http-exception.filter.ts`, `mongo-exception.filter.ts`, `rpc-exception.filter.ts`, `all-exceptions.filter.ts`.
+- All filters produce a consistent `ErrorResponse` shape, defined in `error-response.type.ts`.
+
+---
+
+## 4 — `src/strategies/`
+
+- JWT strategy, auth guards, and custom decorators.
+- Guards are registered globally via `APP_GUARD` in `AppModule` (order: `ThrottlerGuard` -> `JwtAuthGuard` -> `PermissionsGuard`).
+- The `User` type is exported from `jwt.strategy.ts`.
+
+---
+
+## 5 — Root-Level Files
+
+| File                | Purpose                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| `main.ts`           | Bootstrap: creates HTTP app, connects TCP microservice, applies global pipes/middleware |
+| `app.module.ts`     | Root module: global imports, Mongoose connection, feature modules, global providers     |
+| `app.controller.ts` | Health-check endpoint only                                                              |
+| `app.service.ts`    | Health-check logic only                                                                 |
+| `instruments.ts`    | Sentry SDK initialization (imported at the top of `main.ts`)                            |
+
+---
+
+## 6 — Registrations in `AppModule`
+
+- All Mongoose schemas are registered in `MongooseModule.forFeature` inside `AppModule` (global module).
+- All global guards are registered via `APP_GUARD` providers.
+- All global exception filters are registered via `APP_FILTER` providers.
+- Shared services (e.g., `SqsService`) are declared in `AppModule` providers and listed in `exports`.
+
+---
