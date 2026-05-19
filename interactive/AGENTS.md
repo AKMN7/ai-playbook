@@ -1,6 +1,16 @@
-# Interactive Project Standard For Claude
+# Interactive Project Standard For Codex
 
 Touch-first exhibit and kiosk front-end for public displays. Built as a Vite/React application with realtime state sync, short visitor sessions, and kiosk deployment constraints.
+
+## Codex operating notes
+
+- **Search**: use `rg` for content search and `rg --files` for file listing. Avoid `grep -R`, `find`, and `ls -R`.
+- **Edits**: use `apply_patch` for all manual file modifications.
+- **Preserve user changes and dirty worktree state.** Do not discard uncommitted edits, reset branches, or force-push without explicit user confirmation.
+- **Never edit generated or CLI-managed files** (`src/components/ui/`, `src/routeTree.gen.ts`, build output, lockfiles unless dependencies change).
+- **Run the repository's verification commands after meaningful changes** - discover them from `package.json` (typical: `npm run lint`, `npm run build`).
+- **Browser-check UI work** on the target viewport when possible. Kiosk and touch changes need visual verification, not just type checks.
+- **AGENTS.md scope-nesting**: this repo intentionally uses one repo-root `AGENTS.md`. Do not create nested `AGENTS.md` or per-feature overrides unless the user explicitly asks.
 
 ## Charter
 
@@ -19,7 +29,7 @@ When the codebase and these rules disagree:
 - **New screens, features, runtime providers, or deliberate refactors** -> follow `.claude/rules/*.md`.
 - **Clearly broken local patterns** -> flag the inconsistency and ask before changing it as part of an unrelated task.
 
-Do not create nested `CLAUDE.md` files, per-feature instruction overrides, or parallel rule folders unless the user explicitly asks. Do not rely on global Claude configuration to hold project standards - project-specific rules live in `.claude/`.
+Treat Codex `.rules` files as command-approval and sandbox policy, not as a place for architecture or coding conventions.
 
 ## Priority order when rules compete
 
@@ -71,16 +81,16 @@ Do not add Redux, Zustand, CSS modules, styled-components, another router, anoth
 | `src/services/state/`      | Realtime state Zod schemas and defaults                                                         |
 | `src/services/<feature>/`  | `<Feature>.api.ts`, `<Feature>.schemas.ts`, `<Feature>.helpers.ts`                              |
 
-## Rule files
+## Rule files - shared source of truth
 
-Every file below is loaded with this one. Read the relevant file before acting on the concern it covers.
+The rule files in `.claude/rules/` are the **shared source of truth** for both Codex and Claude. Do not fork rule content into this AGENTS.md. If a rule needs updating, edit the file in `.claude/rules/` directly.
 
-| File                                                | Covers                                                                                                  |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| [rules/architecture.md](rules/architecture.md)      | Folder layout, toolchain, routing, imports, generated files, project structure                          |
-| [rules/feature-workflow.md](rules/feature-workflow.md) | Screen-flow features, query/mutation flows, forms, loading/error states, session state ownership     |
-| [rules/realtime-and-kiosk.md](rules/realtime-and-kiosk.md) | Socket singleton, realtime schemas/provider, auto-submit, kiosk lockdown, deployment launcher       |
-| [rules/conventions.md](rules/conventions.md)        | TypeScript/React style, naming, touch-first UI, Tailwind/RTL, translation, verification                 |
+| File                                                            | Covers                                                                                                  |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [.claude/rules/architecture.md](.claude/rules/architecture.md)  | Folder layout, toolchain, routing, imports, generated files, project structure                          |
+| [.claude/rules/feature-workflow.md](.claude/rules/feature-workflow.md) | Screen-flow features, query/mutation flows, forms, loading/error states, session state ownership |
+| [.claude/rules/realtime-and-kiosk.md](.claude/rules/realtime-and-kiosk.md) | Socket singleton, realtime schemas/provider, auto-submit, kiosk lockdown, deployment launcher   |
+| [.claude/rules/conventions.md](.claude/rules/conventions.md)    | TypeScript/React style, naming, touch-first UI, Tailwind/RTL, translation, verification                 |
 
 ## Common commands
 
