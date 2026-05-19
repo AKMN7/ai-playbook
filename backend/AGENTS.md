@@ -1,6 +1,16 @@
-# Backend Project Standard For Claude
+# Backend Project Standard For Codex
 
 NestJS modular-monolith backend. Clerk-issued JWTs validated server-side. MongoDB via Mongoose. AWS S3/SQS, Resend, and Sentry through a dedicated integration layer.
+
+## Codex operating notes
+
+- **Search**: use `rg` for content search and `rg --files` for file listing. Avoid `grep -R`, `find`, and `ls -R`.
+- **Edits**: use `apply_patch` for all file modifications. Do not stream full file rewrites when a targeted patch will do.
+- **Preserve user changes and dirty worktree state.** Do not discard uncommitted edits, reset branches, or force-push without explicit user confirmation.
+- **Never edit generated or CLI-managed files** (`dist/`, `tsconfig.build.tsbuildinfo`, `package-lock.json` unless adding/removing deps, lockfiles in general, Nest-CLI-generated artifacts).
+- **Run the repository's verification commands after meaningful changes** — discover them from `package.json` (typical: `npm run build`, `npm run lint`, `npm test`).
+- **AGENTS.md scope-nesting**: this repo intentionally uses one repo-root `AGENTS.md`. Do not create nested `AGENTS.md` or per-feature override files unless the user explicitly asks.
+- Treat `.cursor/`, `.claude/CLAUDE.md`, `TEAM_GUIDE.md`, and old project docs as historical reference only.
 
 ## Charter
 
@@ -12,7 +22,7 @@ When the codebase and these rules disagree:
 - **New modules, new files, or deliberate refactors** → follow this ruleset exactly.
 - **Clearly broken local patterns** → do not silently "fix" them inside an unrelated task. Flag the inconsistency and ask before changing.
 
-Do not create nested `CLAUDE.md` files, per-feature instruction overrides, or parallel rule folders unless the user explicitly asks. Do not rely on global Claude configuration to hold project standards — project-specific rules live in `.claude/`. Treat `.cursor/`, `TEAM_GUIDE.md`, and old project docs as historical reference only.
+Treat Codex `.rules` files as command-approval and sandbox policy, not as a place for architecture or coding conventions.
 
 ## Priority order when rules compete
 
@@ -56,16 +66,16 @@ Do not create nested `CLAUDE.md` files, per-feature instruction overrides, or pa
 | `src/modules/integration/` | One service per vendor (`sqs.service.ts`, `s3.service.ts`, etc.)             |
 | `src/modules/<feature>/`   | One feature per business domain: module, controller, service, DTOs, schemas  |
 
-## Rule files
+## Rule files — shared source of truth
 
-Every file below is loaded with this one. Read the relevant file before acting on the concern it covers.
+The rule files in `.claude/rules/` are the **shared source of truth** for both Codex (this file) and Claude (`.claude/CLAUDE.md`). **Do not fork rule content into this AGENTS.md** — that causes drift between the two assistants. If a rule needs updating, edit the file in `.claude/rules/` directly.
 
 | File                                  | Covers                                                                                                                  |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [rules/architecture.md](rules/architecture.md)         | Modular-monolith layout, root files, module wiring, library stack, Dockerization, file/folder/class/method/enum naming  |
-| [rules/feature-pipeline.md](rules/feature-pipeline.md) | End-to-end feature workflow (schema → DTO → service → controller → module), controller/service contracts, Mongoose schemas/indexes, DTO validation, idempotency |
-| [rules/boundaries.md](rules/boundaries.md)             | Clerk JWT auth + normalized `User`, integration layer (vendor SDKs, fire-and-forget side effects, webhooks), `ConfigService` access, timezone-aware date handling |
-| [rules/style-and-errors.md](rules/style-and-errors.md) | Comment style, TypeScript discipline, verification (Definition of Done), forbidden patterns, NestJS exception types, global filters, `ErrorResponse` shape, logging, Sentry |
+| [.claude/rules/architecture.md](.claude/rules/architecture.md)         | Modular-monolith layout, root files, module wiring, library stack, Dockerization, file/folder/class/method/enum naming  |
+| [.claude/rules/feature-pipeline.md](.claude/rules/feature-pipeline.md) | End-to-end feature workflow (schema → DTO → service → controller → module), controller/service contracts, Mongoose schemas/indexes, DTO validation, idempotency |
+| [.claude/rules/boundaries.md](.claude/rules/boundaries.md)             | Clerk JWT auth + normalized `User`, integration layer (vendor SDKs, fire-and-forget side effects, webhooks), `ConfigService` access, timezone-aware date handling |
+| [.claude/rules/style-and-errors.md](.claude/rules/style-and-errors.md) | Comment style, TypeScript discipline, verification (Definition of Done), forbidden patterns, NestJS exception types, global filters, `ErrorResponse` shape, logging, Sentry |
 
 ## Common commands
 
@@ -82,4 +92,3 @@ Every file below is loaded with this one. Read the relevant file before acting o
 
 - **Autofix silently**: trivial lint, formatting, or typos inside files you are already editing.
 - **Ask before**: business logic, API contracts, DB schemas, folder structure, module wiring, guards, public error messages, new top-level modules, new shared utilities, new library dependencies, new architectural patterns.
-- Reserve `.claude/settings.json` and `.claude/settings.local.json` for harness configuration (permissions, hooks, env), not architecture or coding conventions.

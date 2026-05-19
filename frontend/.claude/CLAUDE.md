@@ -1,6 +1,6 @@
-# hackathon-fe
+# sideproject-fe
 
-Front-end for the {brief description} app.
+Front-end for the admin-side events management app.
 
 ## Top priority: consistency
 
@@ -27,7 +27,7 @@ When asked to do something, **default to the current structure** of the repo and
 
 ## Import alias
 
-- `@/` maps to `./src/*` (see `tsconfig.json`).
+- `@/` maps to `./src/*` through explicit `paths` entries (no `compilerOptions.baseUrl`).
 - Use absolute imports only; do not traverse above `src/`.
 
 ## Directory map (`src/`)
@@ -41,6 +41,14 @@ When asked to do something, **default to the current structure** of the repo and
 | `locales/`            | `en.json` + `ar.json` (flat keys, kebab-case)                                                 |
 | `routes/`             | TanStack file-system routes (`kebab-case.tsx`, `$param.tsx`, `_layout.tsx`)                   |
 | `services/`           | Per-feature API + schemas; `API.ts` is the Axios entry                                        |
-| `services/<feature>/` | `<feature>.api.ts` (calls), `<feature>.schemas.ts` (Zod), `<feature>.helpers.ts` (pure utils) |
+| `services/<feature>/` | `<Feature>.api.ts` (calls), `<Feature>.schemas.ts` (Zod), `<Feature>.helpers.ts` (pure utils) — PascalCase prefix |
 
-Conventions and workflows live in `.claude/rules/*.md` (loaded automatically with this file).
+## Rule files
+
+Conventions and workflows live in `.claude/rules/*.md`. Read the relevant one before writing code:
+
+| File                  | Covers                                                                                                                            |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `architecture.md`     | Folder layout, file naming per area, routing, Clerk auth wiring, tooling (Vite / TS / ESLint / Prettier / env vars / aliases)     |
+| `feature-workflow.md` | End-to-end CRUD pattern: service → hook → form → table → loading/error/empty states → where state lives                           |
+| `conventions.md`      | TypeScript / React style, naming (component / hook / helper / route / service / schema / query keys), Tailwind + RTL, i18n keys   |
